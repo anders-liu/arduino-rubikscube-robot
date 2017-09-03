@@ -14,6 +14,9 @@
 
 void Program_setup()
 {
+    Serial.begin(9600);
+    Serial.println("Starting...");
+
     Wire.begin();
     Pwm_setup();
 
@@ -21,6 +24,7 @@ void Program_setup()
     Screen_setup();
 
     UI_enterStartWin();
+    Serial.println("Started.");
 }
 
 void Program_loop()

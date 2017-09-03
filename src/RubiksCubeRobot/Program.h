@@ -10,5 +10,7 @@
 
 #pragma once
 
+#include <Arduino.h>
+
 void Program_setup();
 void Program_loop();

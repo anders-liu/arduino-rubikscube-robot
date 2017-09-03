@@ -7,6 +7,7 @@
 //
 
 #include "UI.h"
+#include "Screen.h"
 
 const RgbColor UI_color_startWin PROGMEM{0, 0, 0};
 const RgbColor UI_color_startTitleFore PROGMEM{255, 255, 255};
@@ -20,6 +21,13 @@ const RgbColor UI_color_servoText PROGMEM{255, 242, 0};
 
 void UI_enterStartWin()
 {
+    Screen_off();
+    memcpy_P(&Screen_backColor, &UI_color_startWin, sizeof(RgbColor));
+    Screen_fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    Screen_on();
+
+    memcpy_P(&Screen_backColor, &UI_color_startTitleBack, sizeof(RgbColor));
+    Screen_fillRect(10,10, 100, 100);
 }
 
 void UI_enterMainWin()
