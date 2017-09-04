@@ -157,8 +157,8 @@ void Screen_fillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     BEGIN_DATA_OUT;
     while (count--)
     {
-        WRITE_BYTE(0);
-        WRITE_BYTE(0);
+        WRITE_BYTE(b1);
+        WRITE_BYTE(b2);
     }
     END_BUS;
 }
