@@ -1,0 +1,9 @@
+﻿.vs/
+*.*proj.user
+
+..spec
+*.spec
+build/
+dist/
+
+__pycache__
