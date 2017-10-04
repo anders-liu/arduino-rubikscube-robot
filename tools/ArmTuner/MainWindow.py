@@ -1,30 +1,29 @@
-# -*- coding: utf-8 -*-
+from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal
+from PyQt5.QtWidgets import QMainWindow
+from ServoValueWidget import ServoValueWidget
 
-# Form implementation generated from reading ui file 'MainWindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.9
-#
-# WARNING! All changes made in this file will be lost!
+class MainWindow(QMainWindow):
+    WIN_W = 1000
+    WIN_H = 618
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1000, 618)
-        MainWindow.setMinimumSize(QtCore.QSize(1000, 618))
-        MainWindow.setMaximumSize(QtCore.QSize(1000, 618))
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+    def initUI(self):
+        self.setWindowTitle('Robotic Arm Tuner')
+        self.resize(MainWindow.WIN_W, MainWindow.WIN_H)
+        self.setMaximumSize(MainWindow.WIN_W, MainWindow.WIN_H)
+        self.setMinimumSize(MainWindow.WIN_W, MainWindow.WIN_H)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.setCentralWidget(self.createServoValueWidget())
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Robotic Arm Tuner"))
+    def createServoValueWidget(self):
+        w = self.s = ServoValueWidget()
+        w.setServoName('L1')
+        w.valueChanged.connect(self.onServoValueChanged)
+        return w
 
+    @pyqtSlot(int)
+    def onServoValueChanged(self, value):
+        self.setWindowTitle(str(value))
