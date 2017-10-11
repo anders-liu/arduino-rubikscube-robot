@@ -6,93 +6,99 @@ class ServoValueWidget(QWidget):
     SERVO_MAX = 420
     SERVO_DEFAULT = 307
 
-    valueChanged = pyqtSignal(int)
+    valueChanged = pyqtSignal(str, int)
 
     def __init__(self):
         super().__init__()
-        self.currentValue = ServoValueWidget.SERVO_DEFAULT
-        self.initUI()
+        self.__currentValue = ServoValueWidget.SERVO_DEFAULT
+        self.__initUI()
 
-    def initUI(self):
-        self.setLayout(self.createLayout())
+    def setServoName(self, name):
+        self.__servoName = name
+        self.__groupBox.setTitle(name)
 
-    def createLayout(self):
+    def servoName():
+        return self.__servoName
+
+    def setCurrentValue(self, value):
+        self.__currentValue = value
+        self.__valueSlider.setValue(value)
+        self.__valueSpin.setValue(value)
+
+    def currentValue():
+        return self.__currentValue
+
+    def __initUI(self):
+        self.setLayout(self.__createLayout())
+
+    def __createLayout(self):
         l = QVBoxLayout()
-        l.addWidget(self.createMainGroupBox())
+        l.addWidget(self.__createMainGroupBox())
         return l
 
-    def createMainGroupBox(self):
-        w = self.groupBox = QGroupBox()
-        w.setLayout(self.createMainGroupBoxLayout())
+    def __createMainGroupBox(self):
+        w = self.__groupBox = QGroupBox()
+        w.setLayout(self.__createMainGroupBoxLayout())
         return w
 
-    def createMainGroupBoxLayout(self):
+    def __createMainGroupBoxLayout(self):
         l = QVBoxLayout()
-        l.addLayout(self.createValueEditLayout())
-        l.addWidget(self.createValueSlider())
+        l.addLayout(self.__createValueEditLayout())
+        l.addWidget(self.__createValueSlider())
+        l.addWidget(self.__createSetButton())
         return l
 
-    def createValueEditLayout(self):
+    def __createValueEditLayout(self):
         l = QHBoxLayout()
-        l.addWidget(self.createValueLablel())
-        l.addWidget(self.createValueSpin())
+        l.addWidget(self.__createValueLablel())
+        l.addWidget(self.__createValueSpin())
         return l
 
-    def createValueLablel(self):
+    def __createValueLablel(self):
         w = QLabel()
         w.setText('Value:')
         return w
 
-    def createValueSpin(self):
-        w = self.valueSpin = QSpinBox()
+    def __createValueSpin(self):
+        w = self.__valueSpin = QSpinBox()
         w.setMinimum(ServoValueWidget.SERVO_MIN)
         w.setMaximum(ServoValueWidget.SERVO_MAX)
         w.setValue(ServoValueWidget.SERVO_DEFAULT)
-        w.valueChanged.connect(self.onValueSpinChanged)
+        w.valueChanged.connect(self.__onValueSpinChanged)
         return w
 
-    def createValueSlider(self):
-        w = self.valueSlider = QSlider()
+    def __createValueSlider(self):
+        w = self.__valueSlider = QSlider()
         w.setOrientation(Qt.Horizontal)
         w.setMinimum(ServoValueWidget.SERVO_MIN)
         w.setMaximum(ServoValueWidget.SERVO_MAX)
         w.setValue(ServoValueWidget.SERVO_DEFAULT)
-        w.valueChanged.connect(self.onValueSliderChanged)
+        w.valueChanged.connect(self.__onValueSliderChanged)
         return w
 
-    def createSetButton(self):
+    def __createSetButton(self):
         w = QPushButton()
         w.setText('Set Value')
-        w.clicked.connect(self.onSetButtonClicked)
+        w.clicked.connect(self.__onSetButtonClicked)
         return w
 
-    @pyqtSlot(int)
-    def onValueSpinChanged(self, value):
-        if(self.currentValue != value):
-            self.currentValue = value
-            self.valueSlider.setValue(value)
-            self.valueChanged.emit(value)
+    def __emitValueChanged(self, value):
+        if(self.__currentValue != value):
+            self.__currentValue = value
+            if(self.__valueSlider.value != value):
+                self.__valueSlider.setValue(value)
+            if(self.__valueSpin.value != value):
+                self.__valueSpin.setValue(value)
+            self.valueChanged.emit(self.__servoName, value)
 
     @pyqtSlot(int)
-    def onValueSliderChanged(self, value):
-        if(self.currentValue != value):
-            self.currentValue = value
-            self.valueSpin.setValue(value)
-            self.valueChanged.emit(value)
+    def __onValueSpinChanged(self, value):
+        self.__emitValueChanged(value)
+
+    @pyqtSlot(int)
+    def __onValueSliderChanged(self, value):
+        self.__emitValueChanged(value)
 
     @pyqtSlot()
-    def onSetButtonClicked(self):
-
-
-    def setServoName(self, name):
-        self.servoName = name
-        self.groupBox.setTitle(name)
-
-    def servoName():
-        return self.servoName
-
-    def setCurrentValue(self, name):
-        pass
-
-    def currentValue():
-        pass
+    def __onSetButtonClicked(self):
+        self.__emitValueChanged(self.__currentValue)

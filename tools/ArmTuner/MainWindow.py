@@ -24,6 +24,6 @@ class MainWindow(QMainWindow):
         w.valueChanged.connect(self.onServoValueChanged)
         return w
 
-    @pyqtSlot(int)
-    def onServoValueChanged(self, value):
-        self.setWindowTitle(str(value))
+    @pyqtSlot(str, int)
+    def onServoValueChanged(self, name, value):
+        self.setWindowTitle(f'{name} = {value}')
